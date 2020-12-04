@@ -1,0 +1,2 @@
+mensagens de erro
+CORS problem
