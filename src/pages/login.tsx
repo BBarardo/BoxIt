@@ -12,6 +12,8 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
 function Copyright() {
 	return (
@@ -48,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	avatar: {
 		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
+		backgroundColor: theme.palette.primary.main,
 	},
 	form: {
 		width: "100%", // Fix IE 11 issue.
@@ -61,6 +63,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
 	const classes = useStyles();
+
+	const { register, handleSubmit } = useForm();
+
+	const onSubmit = async (data: any) => {
+		let token = await axios
+			.post("/login", data)
+			.then((res) => {
+				return res.data.token;
+			})
+			.catch((err) => console.log(err));
+	};
 
 	return (
 		<Grid container component="main" className={classes.root}>
@@ -80,9 +93,13 @@ export default function Login() {
 						<LockOutlinedIcon />
 					</Avatar>
 					<Typography component="h1" variant="h5">
-						Sign in
+						Login
 					</Typography>
-					<form className={classes.form} noValidate>
+					<form
+						className={classes.form}
+						noValidate
+						onSubmit={handleSubmit(onSubmit)}
+					>
 						<TextField
 							variant="outlined"
 							margin="normal"
@@ -93,6 +110,7 @@ export default function Login() {
 							name="email"
 							autoComplete="email"
 							autoFocus
+							inputRef={register}
 						/>
 						<TextField
 							variant="outlined"
@@ -104,6 +122,7 @@ export default function Login() {
 							type="password"
 							id="password"
 							autoComplete="current-password"
+							inputRef={register}
 						/>
 						<FormControlLabel
 							control={
@@ -118,7 +137,7 @@ export default function Login() {
 							color="primary"
 							className={classes.submit}
 						>
-							Sign In
+							Login
 						</Button>
 						<Grid container>
 							<Grid item xs>
@@ -127,7 +146,7 @@ export default function Login() {
 								</Link>
 							</Grid>
 							<Grid item>
-								<Link href="#" variant="body2">
+								<Link href="/signUp" variant="body2">
 									{"Don't have an account? Sign Up"}
 								</Link>
 							</Grid>

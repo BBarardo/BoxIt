@@ -4,10 +4,9 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Home from "./pages";
 import About from "./pages/about";
-import SignUp from "./pages/signUp";
 import Services from "./pages/services";
 import Login from "./pages/login";
-import axios from "axios";
+import SignUp from "./pages/signUp/signUp";
 
 function App() {
 	return (
