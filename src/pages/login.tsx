@@ -15,6 +15,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
+import { useDispatch } from "react-redux";
+import { signIn } from "../redux/actions/signIn";
+import { RouteComponentProps } from "react-router-dom";
+
 function Copyright() {
 	return (
 		<Typography variant="body2" color="textSecondary" align="center">
@@ -61,10 +65,14 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function Login() {
+interface Props extends RouteComponentProps<any> {}
+
+export default function Login(props: Props) {
 	const classes = useStyles();
 
 	const { register, handleSubmit } = useForm();
+
+	const dispatch = useDispatch();
 
 	const onSubmit = async (data: any) => {
 		let token = await axios
@@ -73,6 +81,8 @@ export default function Login() {
 				return res.data.token;
 			})
 			.catch((err) => console.log(err));
+		dispatch(signIn(token));
+		props.history.push("/");
 	};
 
 	return (

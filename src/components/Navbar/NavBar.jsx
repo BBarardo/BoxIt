@@ -1,8 +1,11 @@
 import React from "react";
 import { Nav, NavLink, Bars, NavMenu, NavBtn, Logo } from "./NavBarElements";
 import { BtnLinkPrimary } from "../Buttons";
+import { useSelector } from "react-redux";
 
 const NavBar = () => {
+	const isLogged = useSelector((state) => state.isLogged);
+
 	return (
 		<>
 			<Nav>
@@ -25,9 +28,13 @@ const NavBar = () => {
 						Sign Up
 					</NavLink>
 				</NavMenu>
-				<NavBtn>
-					<BtnLinkPrimary to="/login">Login</BtnLinkPrimary>
-				</NavBtn>
+				{!isLogged ? (
+					<NavBtn>
+						<BtnLinkPrimary to="/login">Login</BtnLinkPrimary>
+					</NavBtn>
+				) : (
+					<div></div>
+				)}
 			</Nav>
 		</>
 	);
