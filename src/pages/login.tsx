@@ -16,8 +16,10 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 
 import { useDispatch } from "react-redux";
-import { signIn } from "../redux/actions/signIn";
 import { RouteComponentProps } from "react-router-dom";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import login from "../redux/actions/authAction";
 
 function Copyright() {
 	return (
@@ -30,6 +32,10 @@ function Copyright() {
 			{"."}
 		</Typography>
 	);
+}
+
+function Alert(props: AlertProps) {
+	return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -70,24 +76,61 @@ interface Props extends RouteComponentProps<any> {}
 export default function Login(props: Props) {
 	const classes = useStyles();
 
-	const { register, handleSubmit } = useForm();
+	const { register, handleSubmit, errors, setError, clearErrors } = useForm();
 
 	const dispatch = useDispatch();
 
 	const onSubmit = async (data: any) => {
-		let token = await axios
+		let reqData = await axios
 			.post("/login", data)
 			.then((res) => {
-				return res.data.token;
+				return res.data;
+				// return res.data.token;
 			})
-			.catch((err) => console.log(err));
-		dispatch(signIn(token));
-		props.history.push("/");
+			.catch(function (error) {
+				if (error.response) {
+					return error.response.data;
+					console.log(error.response.data);
+					console.log(error.response.data.message);
+					setError("errMsg", {
+						message: error.response.data.message,
+					});
+					setOpen(true);
+				}
+			});
+		console.log(reqData);
+		if (reqData.type === "error") {
+			setError("errMsg", {
+				message: reqData.message,
+			});
+			setOpen(true);
+		} else {
+			// dispatch(login(reqData.token, reqData.refreshToken));
+			dispatch(login(reqData.data));
+			props.history.push("/");
+		}
+		// dispatch(signIn(token));
+	};
+
+	const [open, setOpen] = React.useState(false);
+
+	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		clearErrors("errMsg");
+		setOpen(false);
 	};
 
 	return (
 		<Grid container component="main" className={classes.root}>
 			<CssBaseline />
+			<Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+				<Alert onClose={handleClose} severity="error">
+					{errors.errMsg?.message}
+				</Alert>
+			</Snackbar>
 			<Grid item xs={false} sm={4} md={7} className={classes.image} />
 			<Grid
 				item
@@ -120,7 +163,17 @@ export default function Login(props: Props) {
 							name="email"
 							autoComplete="email"
 							autoFocus
-							inputRef={register}
+							inputRef={register({
+								required: true,
+								pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
+							})}
+							error={errors.email}
+							helperText={
+								(errors.email?.type === "required" &&
+									"Email is required") ||
+								(errors.email?.type === "pattern" &&
+									"Invalid email")
+							}
 						/>
 						<TextField
 							variant="outlined"
@@ -132,7 +185,17 @@ export default function Login(props: Props) {
 							type="password"
 							id="password"
 							autoComplete="current-password"
-							inputRef={register}
+							inputRef={register({
+								required: true,
+								pattern: /^.[^()<>[\]{}=]+$/,
+							})}
+							error={errors.password}
+							helperText={
+								(errors.password?.type === "required" &&
+									"Password is required") ||
+								(errors.password?.type === "pattern" &&
+									"Invalid password")
+							}
 						/>
 						<FormControlLabel
 							control={

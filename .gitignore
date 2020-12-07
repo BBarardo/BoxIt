@@ -22,3 +22,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /.eslintcache
+
+#folders
+/.idea
+/.vscode
+
+#files
+*.iml
+*.log
+workspace.code-workspace
+debug.log

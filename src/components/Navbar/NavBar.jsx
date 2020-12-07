@@ -4,7 +4,7 @@ import { BtnLinkPrimary } from "../Buttons";
 import { useSelector } from "react-redux";
 
 const NavBar = () => {
-	const isLogged = useSelector((state) => state.isLogged);
+	const isLogged = useSelector((state) => state.auth.isLogged);
 
 	return (
 		<>
@@ -24,9 +24,20 @@ const NavBar = () => {
 					<NavLink to="/contact-us" activeStyle>
 						Contact Us
 					</NavLink>
-					<NavLink to="/signUp" activeStyle>
-						Sign Up
-					</NavLink>
+					{!isLogged ? (
+						<NavLink to="/signUp" activeStyle>
+							Sign Up
+						</NavLink>
+					) : (
+						<div></div>
+					)}
+					{isLogged ? (
+						<NavLink to="/projects" activeStyle>
+							Projects
+						</NavLink>
+					) : (
+						<div></div>
+					)}
 				</NavMenu>
 				{!isLogged ? (
 					<NavBtn>

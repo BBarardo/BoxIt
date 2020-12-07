@@ -80,6 +80,7 @@ const SignUp: React.FunctionComponent<Props> = (props) => {
 			let test = await axios
 				.post("/signUp", data)
 				.then((res) => {
+					console.log(res);
 					return true;
 				})
 				.catch((err) => console.log(err));
@@ -214,8 +215,7 @@ const SignUp: React.FunctionComponent<Props> = (props) => {
 									})}
 									error={errors.password}
 									helperText={
-										(errors.lastpasswordName?.type ===
-											"required" &&
+										(errors.password?.type === "required" &&
 											"Password is required") ||
 										(errors.password?.type ===
 											"minLength" &&

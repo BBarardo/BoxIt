@@ -1,11 +1,8 @@
-import loggedReducer from "./isLogged";
-// import jwtReducer from "./jwt";
-
 import { combineReducers } from "redux";
+import authReducer from "./authReducer";
 
-const allReducer = combineReducers({
-	isLogged: loggedReducer,
-	// jwt: jwtReducer,
+const store = combineReducers({
+	auth: authReducer,
 });
 
-export default allReducer;
+export default store;

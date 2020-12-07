@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "src/redux/reducers/auth.tsx", "src/redux/reducers/_authReducer.tsx"  ]
 }
